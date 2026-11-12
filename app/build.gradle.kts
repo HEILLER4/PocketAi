@@ -4,6 +4,15 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+val releaseKeystorePath = System.getenv("POCKETAI_KEYSTORE_PATH")
+val releaseStorePassword = System.getenv("POCKETAI_STORE_PASSWORD")
+val releaseKeyPassword = System.getenv("POCKETAI_KEY_PASSWORD")
+
+val hasReleaseSigning =
+    !releaseKeystorePath.isNullOrBlank() &&
+    !releaseStorePassword.isNullOrBlank() &&
+    !releaseKeyPassword.isNullOrBlank()
+
 android {
     namespace = "com.pocketai.assistant"
     compileSdk = 35
@@ -16,18 +25,24 @@ android {
         versionName = "0.1.0-beta"
     }
     signingConfigs {
-    create("release") {
-        storeFile = file("${System.getProperty("user.home")}/.keys/pocketai-release.jks")
-        storePassword = System.getenv("POCKETAI_STORE_PASSWORD") ?: ""
-        keyAlias = "pocketai"
-        keyPassword = System.getenv("POCKETAI_KEY_PASSWORD") ?: ""
+    if (hasReleaseSigning) {
+        create("release") {
+            storeFile = file(releaseKeystorePath!!)
+            storePassword = releaseStorePassword!!
+            keyAlias = "pocketai"
+            keyPassword = releaseKeyPassword!!
+        }
     }
 }
 
 buildTypes {
     getByName("release") {
         applicationIdSuffix = ".beta"
-        signingConfig = signingConfigs.getByName("release")
+
+        if (hasReleaseSigning) {
+            signingConfig = signingConfigs.getByName("release")
+        }
+
         isMinifyEnabled = false
     }
 }
