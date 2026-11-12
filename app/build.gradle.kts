@@ -15,6 +15,22 @@ android {
         versionCode = 1
         versionName = "0.1.0-beta"
     }
+    signingConfigs {
+    create("release") {
+        storeFile = file("${System.getProperty("user.home")}/.keys/pocketai-release.jks")
+        storePassword = System.getenv("POCKETAI_STORE_PASSWORD") ?: ""
+        keyAlias = "pocketai"
+        keyPassword = System.getenv("POCKETAI_KEY_PASSWORD") ?: ""
+    }
+}
+
+buildTypes {
+    getByName("release") {
+        applicationIdSuffix = ".beta"
+        signingConfig = signingConfigs.getByName("release")
+        isMinifyEnabled = false
+    }
+}
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
