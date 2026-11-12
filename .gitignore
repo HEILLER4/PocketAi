@@ -1,0 +1,32 @@
+.gradle/
+**/build/
+local.properties
+*.jks
+*.keystore
+*.litertlm
+*.bak
+*.tmp
+*.new
+.idea/
+.DS_Store
+
+# Source backups
+*.backup
+*.pre-chat
+*.orig
+
+# Generated Android packages
+*.apk
+*.aab
+
+# Models and credentials
+*.tflite
+*.task
+*.pem
+*.p12
+.env
+.env.*
+
+# Other generated files
+captures/
+Thumbs.db
